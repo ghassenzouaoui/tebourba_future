@@ -85,7 +85,8 @@
         border-bottom: 15px solid #333;
       }
 
-      .spin-button {
+      .spin-button,
+      #giftButton {
         padding: 10px 20px;
         background-color: #007bff;
         color: #fff;
@@ -95,14 +96,16 @@
         font-size: 1rem;
       }
 
-      .spin-button:disabled {
+      .spin-button:disabled,
+      #giftButton:disabled {
         background-color: #ccc;
         cursor: not-allowed;
       }
 
       .result,
       .total-points,
-      .remaining-spins {
+      .remaining-spins,
+      .gift-result {
         margin-top: 20px;
         font-size: 1.2rem;
         font-weight: bold;
@@ -121,19 +124,41 @@
         cursor: pointer;
       }
 
+      #formContainer {
+        display: none;
+        margin-top: 20px;
+      }
+
+      form input,
+      form button {
+        margin: 10px 0;
+        padding: 8px;
+        font-size: 1rem;
+      }
+
+      form button {
+        background-color: #007bff;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+      }
+
       @media (max-width: 480px) {
         h1 {
           font-size: 1.5rem;
         }
 
-        .spin-button {
+        .spin-button,
+        #giftButton {
           font-size: 0.9rem;
           padding: 8px 16px;
         }
 
         .result,
         .total-points,
-        .remaining-spins {
+        .remaining-spins,
+        .gift-result {
           font-size: 1rem;
         }
       }
@@ -160,6 +185,24 @@
         انتهت النقرات! <span class="ad-link" id="watchAd">اضغط هنا</span> لمشاهدة إعلان وربح نقاط إضافية.
       </p>
     </div>
+    <div id="rewardIcon" style="display: none; margin-top: 20px;">
+      <p>تهانينا! لقد جمعت 2500 نقطة وحصلت على الجائزة!</p>
+    </div>
+    <button id="giftButton" style="display: none; margin-top: 20px;">هدية مفاجأة</button>
+    <div class="gift-result" id="giftResult"></div>
+
+    
+
+    <!-- نموذج إدخال البيانات -->
+    <div id="formContainer">
+      <h3>تهانينا! لقد فزت بجائزة</h3>
+      <form id="winnerForm">
+        <input type="text" id="prize" readonly />
+        <input type="text" placeholder="أدخل اسمك" required />
+        <input type="text" placeholder="أدخل رقم الهاتف" required />
+        <button type="submit">تأكيد</button>
+      </form>
+    </div>
 
     <script>
       const wheel = document.getElementById("wheel");
@@ -169,13 +212,21 @@
       const totalPointsDisplay = document.getElementById("totalPoints");
       const adMessage = document.getElementById("adMessage");
       const watchAd = document.getElementById("watchAd");
+      const rewardIcon = document.getElementById("rewardIcon");
+      const giftButton = document.getElementById("giftButton");
+      const giftResult = document.getElementById("giftResult");
+      const formContainer = document.getElementById("formContainer");
+      const winnerForm = document.getElementById("winnerForm");
+      const prizeInput = document.getElementById("prize");
 
       const prizes = [
-        { label: "10 نقطة", points: 10 },
-        { label: "20 نقطة", points: 20 },
-        { label: "الجائزة الكبرى", points: 100 },
-        { label: "30 نقطة", points: 30 },
+        { label: "10 نقطة", points: 100 },
+        { label: "20 نقطة", points: 2000 },
+        { label: "الجائزة الكبرى", points: 1000 },
+        { label: "30 نقطة", points: 3000 },
       ];
+
+      const giftPrizes = ["هاتف ذكي", "تلفاز", "ساعة ذكية", "تابلت"];
 
       let currentRotation = 0;
       let totalPoints = parseInt(localStorage.getItem("totalPoints")) || 0; // استرجاع النقاط المخزنة
@@ -184,6 +235,11 @@
       // تحديث عرض النقاط والنقرات المتبقية عند تحميل الصفحة
       totalPointsDisplay.textContent = `مجموع النقاط: ${totalPoints}`;
       remainingSpinsDisplay.textContent = `النقرات المتبقية: ${remainingSpins}`;
+
+      if (totalPoints >= 2500) {
+        rewardIcon.style.display = "block";
+        giftButton.style.display = "inline-block";
+      }
 
       spinButton.addEventListener("click", () => {
         if (remainingSpins <= 0) return;
@@ -200,10 +256,19 @@
           const prize = prizes[selectedPrizeIndex];
 
           totalPoints += prize.points;
-          result.textContent = `تهانينا! لقد ربحت ${prize.label}`;
-          totalPointsDisplay.textContent = `مجموع النقاط: ${totalPoints}`;
-          remainingSpins--;
 
+          // Reset points if they reach or exceed 2500
+          if (totalPoints >= 2500) {
+            totalPoints = 0;  // Reset points to 0
+            totalPointsDisplay.textContent = `مجموع النقاط: ${totalPoints}`;
+            rewardIcon.style.display = "block";
+            giftButton.style.display = "inline-block";
+          } else {
+            result.textContent = `تهانينا! لقد ربحت ${prize.label}`;
+            totalPointsDisplay.textContent = `مجموع النقاط: ${totalPoints}`;
+          }
+
+          remainingSpins--;
           remainingSpinsDisplay.textContent = `النقرات المتبقية: ${remainingSpins}`;
 
           // حفظ النقاط والنقرات المتبقية في localStorage
@@ -219,6 +284,13 @@
         }, 4000);
       });
 
+      giftButton.addEventListener("click", () => {
+        const randomGift = giftPrizes[Math.floor(Math.random() * giftPrizes.length)];
+        giftResult.textContent = `هدية مفاجأة: ${randomGift}`;
+        formContainer.style.display = "block";
+        prizeInput.value = randomGift;
+      });
+
       watchAd.addEventListener("click", () => {
         alert("مشاهدة إعلان...");
         totalPoints += 10;
@@ -231,6 +303,18 @@
         // حفظ النقاط والنقرات المتبقية بعد مشاهدة الإعلان
         localStorage.setItem("totalPoints", totalPoints);
         localStorage.setItem("remainingSpins", remainingSpins);
+      });
+
+      winnerForm.addEventListener("submit", (event) => {
+        event.preventDefault();
+        // Hide the gift button
+        giftButton.style.display = "none";
+        
+        // Show confirmation message
+        alert("تم تسجيل بياناتك بنجاح!");
+
+        // Hide the form after submission
+        formContainer.style.display = "none";
       });
     </script>
   </body>
