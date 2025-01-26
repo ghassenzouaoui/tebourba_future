@@ -112,242 +112,328 @@
 </head>
 <body>
   <!DOCTYPE html>
-<html lang="ar">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>عجلة الحظ</title>
-    <style>
-      body {
-        font-family: Arial, sans-serif;
-        text-align: center;
-        margin: 20px;
-        background-color: #f9f9f9;
-      }
-
-      h1 {
-        color: #333;
-        font-size: 2rem;
-      }
-
-      .wheel-container {
-        position: relative;
-        width: 80vw;
-        max-width: 300px;
-        height: 80vw;
-        max-height: 300px;
-        margin: 20px auto;
-      }
-
-      .wheel {
-        width: 100%;
-        height: 100%;
-        border: 5px solid #ccc;
-        border-radius: 50%;
-        background: conic-gradient(
-          #ff4d4d 0% 25%,
-          #4caf50 25% 50%,
-          #4d94ff 50% 75%,
-          #fbc02d 75% 100%
-        );
-        position: relative;
-        transition: transform 4s ease-out;
-      }
-
-      .wheel span {
-        position: absolute;
-        font-size: 1rem;
-        font-weight: bold;
-        color: #fff;
-        transform: translate(-50%, -50%);
-      }
-
-      .wheel span:nth-child(1) {
-        top: 25%;
-        left: 10%;
-        transform: translate(-50%, -50%) rotate(-60deg);
-      }
-
-      .wheel span:nth-child(2) {
-        top: 20%;
-        left: 80%;
-        transform: translate(-50%, -50%) rotate(40deg);
-      }
-
-      .wheel span:nth-child(3) {
-        bottom: 8%;
-        left: 70%;
-        transform: translate(-50%, -50%) rotate(150deg);
-      }
-
-      .wheel span:nth-child(4) {
-        top: 80%;
-        left: 15%;
-        transform: translate(-50%, -50%) rotate(-130deg);
-      }
-
-      .pointer {
-        position: absolute;
-        top: -10px;
-        left: 50%;
-        transform: translateX(-50%);
-        width: 0;
-        height: 0;
-        border-left: 10px solid transparent;
-        border-right: 10px solid transparent;
-        border-bottom: 15px solid #333;
-      }
-
-      .spin-button {
-        padding: 10px 20px;
-        background-color: #007bff;
-        color: #fff;
-        border: none;
-        border-radius: 5px;
-        cursor: pointer;
-        font-size: 1rem;
-      }
-
-      .spin-button:disabled {
-        background-color: #ccc;
-        cursor: not-allowed;
-      }
-
-      .result,
-      .total-points,
-      .remaining-spins {
-        margin-top: 20px;
-        font-size: 1.2rem;
-        font-weight: bold;
-        color: #333;
-      }
-
-      .ad-message {
-        color: #d9534f;
-        font-size: 1.2rem;
-        margin-top: 20px;
-      }
-
-      .ad-link {
-        color: #007bff;
-        text-decoration: underline;
-        cursor: pointer;
-      }
-
-      @media (max-width: 480px) {
+  <!DOCTYPE html>
+  <html lang="ar">
+    <head>
+      <meta charset="UTF-8" />
+      <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <title>عجلة الحظ</title>
+      <style>
+        body {
+          font-family: Arial, sans-serif;
+          text-align: center;
+          margin: 20px;
+          background-color: #f9f9f9;
+        }
+  
         h1 {
-          font-size: 1.5rem;
+          color: #333;
+          font-size: 2rem;
         }
-
-        .spin-button {
-          font-size: 0.9rem;
-          padding: 8px 16px;
+  
+        .wheel-container {
+          position: relative;
+          width: 80vw;
+          max-width: 300px;
+          height: 80vw;
+          max-height: 300px;
+          margin: 20px auto;
         }
-
-        .result,
-        .total-points,
-        .remaining-spins {
+  
+        .wheel {
+          width: 100%;
+          height: 100%;
+          border: 5px solid #ccc;
+          border-radius: 50%;
+          background: conic-gradient(
+            #ff4d4d 0% 25%,
+            #4caf50 25% 50%,
+            #4d94ff 50% 75%,
+            #fbc02d 75% 100%
+          );
+          position: relative;
+          transition: transform 4s ease-out;
+        }
+  
+        .wheel span {
+          position: absolute;
+          font-size: 1rem;
+          font-weight: bold;
+          color: #fff;
+          transform: translate(-50%, -50%);
+        }
+  
+        .wheel span:nth-child(1) {
+          top: 25%;
+          left: 10%;
+          transform: translate(-50%, -50%) rotate(-60deg);
+        }
+  
+        .wheel span:nth-child(2) {
+          top: 20%;
+          left: 80%;
+          transform: translate(-50%, -50%) rotate(40deg);
+        }
+  
+        .wheel span:nth-child(3) {
+          bottom: 8%;
+          left: 70%;
+          transform: translate(-50%, -50%) rotate(150deg);
+        }
+  
+        .wheel span:nth-child(4) {
+          top: 80%;
+          left: 15%;
+          transform: translate(-50%, -50%) rotate(-130deg);
+        }
+  
+        .pointer {
+          position: absolute;
+          top: -10px;
+          left: 50%;
+          transform: translateX(-50%);
+          width: 0;
+          height: 0;
+          border-left: 10px solid transparent;
+          border-right: 10px solid transparent;
+          border-bottom: 15px solid #333;
+        }
+  
+        .spin-button,
+        #giftButton {
+          padding: 10px 20px;
+          background-color: #007bff;
+          color: #fff;
+          border: none;
+          border-radius: 5px;
+          cursor: pointer;
           font-size: 1rem;
         }
-      }
-    </style>
-  </head>
-  <body>
-    <h1>عجلة الحظ</h1>
-    <p>اضغط على الزر لتدوير العجلة والفوز بجائزة!</p>
-    <div class="wheel-container">
-      <div class="pointer"></div>
-      <div class="wheel" id="wheel">
-        <span>10 نقطة</span>
-        <span>30 نقطة</span>
-        <span>الجائزة الكبرى</span>
-        <span>20 نقطة</span>
+  
+        .spin-button:disabled,
+        #giftButton:disabled {
+          background-color: #ccc;
+          cursor: not-allowed;
+        }
+  
+        .result,
+        .total-points,
+        .remaining-spins,
+        .gift-result {
+          margin-top: 20px;
+          font-size: 1.2rem;
+          font-weight: bold;
+          color: #333;
+        }
+  
+        .ad-message {
+          color: #d9534f;
+          font-size: 1.2rem;
+          margin-top: 20px;
+        }
+  
+        .ad-link {
+          color: #007bff;
+          text-decoration: underline;
+          cursor: pointer;
+        }
+  
+        #formContainer {
+          display: none;
+          margin-top: 20px;
+        }
+  
+        form input,
+        form button {
+          margin: 10px 0;
+          padding: 8px;
+          font-size: 1rem;
+        }
+  
+        form button {
+          background-color: #007bff;
+          color: white;
+          border: none;
+          border-radius: 5px;
+          cursor: pointer;
+        }
+  
+        @media (max-width: 480px) {
+          h1 {
+            font-size: 1.5rem;
+          }
+  
+          .spin-button,
+          #giftButton {
+            font-size: 0.9rem;
+            padding: 8px 16px;
+          }
+  
+          .result,
+          .total-points,
+          .remaining-spins,
+          .gift-result {
+            font-size: 1rem;
+          }
+        }
+      </style>
+    </head>
+    <body>
+      <h1>عجلة الحظ</h1>
+      <p>اضغط على الزر لتدوير العجلة والفوز بجائزة!</p>
+      <div class="wheel-container">
+        <div class="pointer"></div>
+        <div class="wheel" id="wheel">
+          <span>10 نقطة</span>
+          <span>30 نقطة</span>
+          <span>الجائزة الكبرى</span>
+          <span>20 نقطة</span>
+        </div>
       </div>
-    </div>
-    <div class="remaining-spins" id="remainingSpins">النقرات المتبقية: 2</div>
-    <button class="spin-button" id="spinButton">قم بالتدوير الآن</button>
-    <div class="result" id="result"></div>
-    <div class="total-points" id="totalPoints">مجموع النقاط: 0</div>
-    <div class="ad-message" id="adMessage" style="display: none;">
-      <p>
-        انتهت النقرات! <span class="ad-link" id="watchAd">اضغط هنا</span> لمشاهدة إعلان وربح نقاط إضافية.
-      </p>
-    </div>
-
-    <script>
-      const wheel = document.getElementById("wheel");
-      const spinButton = document.getElementById("spinButton");
-      const remainingSpinsDisplay = document.getElementById("remainingSpins");
-      const result = document.getElementById("result");
-      const totalPointsDisplay = document.getElementById("totalPoints");
-      const adMessage = document.getElementById("adMessage");
-      const watchAd = document.getElementById("watchAd");
-
-      const prizes = [
-        { label: "10 نقطة", points: 10 },
-        { label: "20 نقطة", points: 20 },
-        { label: "الجائزة الكبرى", points: 100 },
-        { label: "30 نقطة", points: 30 },
-      ];
-
-      let currentRotation = 0;
-      let totalPoints = parseInt(localStorage.getItem("totalPoints")) || 0; // استرجاع النقاط المخزنة
-      let remainingSpins = parseInt(localStorage.getItem("remainingSpins")) || 2; // استرجاع عدد النقرات المتبقية
-
-      // تحديث عرض النقاط والنقرات المتبقية عند تحميل الصفحة
-      totalPointsDisplay.textContent = `مجموع النقاط: ${totalPoints}`;
-      remainingSpinsDisplay.textContent = `النقرات المتبقية: ${remainingSpins}`;
-
-      spinButton.addEventListener("click", () => {
-        if (remainingSpins <= 0) return;
-
-        spinButton.disabled = true;
-        const randomDegree = Math.floor(Math.random() * 360) + 720;
-        currentRotation += randomDegree;
-        wheel.style.transition = "transform 4s ease-out";
-        wheel.style.transform = `rotate(${currentRotation}deg)`;
-
-        setTimeout(() => {
-          const normalizedDegree = currentRotation % 360;
-          const selectedPrizeIndex = Math.floor(normalizedDegree / 90);
-          const prize = prizes[selectedPrizeIndex];
-
-          totalPoints += prize.points;
-          result.textContent = `تهانينا! لقد ربحت ${prize.label}`;
+      <div class="remaining-spins" id="remainingSpins">النقرات المتبقية: 2</div>
+      <button class="spin-button" id="spinButton">قم بالتدوير الآن</button>
+      <div class="result" id="result"></div>
+      <div class="total-points" id="totalPoints">مجموع النقاط: 0</div>
+      <div class="ad-message" id="adMessage" style="display: none;">
+        <p>
+          انتهت النقرات! <span class="ad-link" id="watchAd">اضغط هنا</span> لمشاهدة إعلان وربح نقاط إضافية.
+        </p>
+      </div>
+      <div id="rewardIcon" style="display: none; margin-top: 20px;">
+        <p>تهانينا! لقد جمعت 2500 نقطة وحصلت على الجائزة!</p>
+      </div>
+      <button id="giftButton" style="display: none; margin-top: 20px;">هدية مفاجأة</button>
+      <div class="gift-result" id="giftResult"></div>
+  
+      
+  
+      <!-- نموذج إدخال البيانات -->
+      <div id="formContainer">
+        <h3>تهانينا! لقد فزت بجائزة</h3>
+        <form id="winnerForm">
+          <input type="text" id="prize" readonly />
+          <input type="text" placeholder="أدخل اسمك" required />
+          <input type="text" placeholder="أدخل رقم الهاتف" required />
+          <button type="submit">تأكيد</button>
+        </form>
+      </div>
+  
+      <script>
+        const wheel = document.getElementById("wheel");
+        const spinButton = document.getElementById("spinButton");
+        const remainingSpinsDisplay = document.getElementById("remainingSpins");
+        const result = document.getElementById("result");
+        const totalPointsDisplay = document.getElementById("totalPoints");
+        const adMessage = document.getElementById("adMessage");
+        const watchAd = document.getElementById("watchAd");
+        const rewardIcon = document.getElementById("rewardIcon");
+        const giftButton = document.getElementById("giftButton");
+        const giftResult = document.getElementById("giftResult");
+        const formContainer = document.getElementById("formContainer");
+        const winnerForm = document.getElementById("winnerForm");
+        const prizeInput = document.getElementById("prize");
+  
+        const prizes = [
+          { label: "10 نقطة", points: 100 },
+          { label: "20 نقطة", points: 2000 },
+          { label: "الجائزة الكبرى", points: 1000 },
+          { label: "30 نقطة", points: 3000 },
+        ];
+  
+        const giftPrizes = ["هاتف ذكي", "تلفاز", "ساعة ذكية", "تابلت"];
+  
+        let currentRotation = 0;
+        let totalPoints = parseInt(localStorage.getItem("totalPoints")) || 0; // استرجاع النقاط المخزنة
+        let remainingSpins = parseInt(localStorage.getItem("remainingSpins")) || 2; // استرجاع عدد النقرات المتبقية
+  
+        // تحديث عرض النقاط والنقرات المتبقية عند تحميل الصفحة
+        totalPointsDisplay.textContent = `مجموع النقاط: ${totalPoints}`;
+        remainingSpinsDisplay.textContent = `النقرات المتبقية: ${remainingSpins}`;
+  
+        if (totalPoints >= 2500) {
+          rewardIcon.style.display = "block";
+          giftButton.style.display = "inline-block";
+        }
+  
+        spinButton.addEventListener("click", () => {
+          if (remainingSpins <= 0) return;
+  
+          spinButton.disabled = true;
+          const randomDegree = Math.floor(Math.random() * 360) + 720;
+          currentRotation += randomDegree;
+          wheel.style.transition = "transform 4s ease-out";
+          wheel.style.transform = `rotate(${currentRotation}deg)`;
+  
+          setTimeout(() => {
+            const normalizedDegree = currentRotation % 360;
+            const selectedPrizeIndex = Math.floor(normalizedDegree / 90);
+            const prize = prizes[selectedPrizeIndex];
+  
+            totalPoints += prize.points;
+  
+            // Reset points if they reach or exceed 2500
+            if (totalPoints >= 2500) {
+              totalPoints = 0;  // Reset points to 0
+              totalPointsDisplay.textContent = `مجموع النقاط: ${totalPoints}`;
+              rewardIcon.style.display = "block";
+              giftButton.style.display = "inline-block";
+            } else {
+              result.textContent = `تهانينا! لقد ربحت ${prize.label}`;
+              totalPointsDisplay.textContent = `مجموع النقاط: ${totalPoints}`;
+            }
+  
+            remainingSpins--;
+            remainingSpinsDisplay.textContent = `النقرات المتبقية: ${remainingSpins}`;
+  
+            // حفظ النقاط والنقرات المتبقية في localStorage
+            localStorage.setItem("totalPoints", totalPoints);
+            localStorage.setItem("remainingSpins", remainingSpins);
+  
+            if (remainingSpins <= 0) {
+              spinButton.style.display = "none";
+              adMessage.style.display = "block";
+            }
+  
+            spinButton.disabled = false;
+          }, 4000);
+        });
+  
+        giftButton.addEventListener("click", () => {
+          const randomGift = giftPrizes[Math.floor(Math.random() * giftPrizes.length)];
+          giftResult.textContent = `هدية مفاجأة: ${randomGift}`;
+          formContainer.style.display = "block";
+          prizeInput.value = randomGift;
+        });
+  
+        watchAd.addEventListener("click", () => {
+          alert("مشاهدة إعلان...");
+          totalPoints += 10;
           totalPointsDisplay.textContent = `مجموع النقاط: ${totalPoints}`;
-          remainingSpins--;
-
+          remainingSpins = 1;
           remainingSpinsDisplay.textContent = `النقرات المتبقية: ${remainingSpins}`;
-
-          // حفظ النقاط والنقرات المتبقية في localStorage
+          spinButton.style.display = "inline-block";
+          adMessage.style.display = "none";
+  
+          // حفظ النقاط والنقرات المتبقية بعد مشاهدة الإعلان
           localStorage.setItem("totalPoints", totalPoints);
           localStorage.setItem("remainingSpins", remainingSpins);
-
-          if (remainingSpins <= 0) {
-            spinButton.style.display = "none";
-            adMessage.style.display = "block";
-          }
-
-          spinButton.disabled = false;
-        }, 4000);
-      });
-
-      watchAd.addEventListener("click", () => {
-        alert("مشاهدة إعلان...");
-        totalPoints += 10;
-        totalPointsDisplay.textContent = `مجموع النقاط: ${totalPoints}`;
-        remainingSpins = 1;
-        remainingSpinsDisplay.textContent = `النقرات المتبقية: ${remainingSpins}`;
-        spinButton.style.display = "inline-block";
-        adMessage.style.display = "none";
-
-        // حفظ النقاط والنقرات المتبقية بعد مشاهدة الإعلان
-        localStorage.setItem("totalPoints", totalPoints);
-        localStorage.setItem("remainingSpins", remainingSpins);
-      });
-    </script>
-  </body>
-</html>
+        });
+  
+        winnerForm.addEventListener("submit", (event) => {
+          event.preventDefault();
+          // Hide the gift button
+          giftButton.style.display = "none";
+          
+          // Show confirmation message
+          alert("تم تسجيل بياناتك بنجاح!");
+  
+          // Hide the form after submission
+          formContainer.style.display = "none";
+        });
+      </script>
+    </body>
+  </html>
+  
 
 
 
